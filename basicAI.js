@@ -5,19 +5,25 @@ dotenv.config();
 
 const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY});
 
-const messageBuilder = async (messages, model) =>{
-  const completion = await openai.chat.completions.create({
+const messageBuilder = async (messages) =>{
+  try{
+    const completion = await openai.chat.completions.create({
     messages: messages,
-    model: model ? model : 'gpt-4o'
+    model: 'gpt-4o'
   })
+    return completion.choices[0];
+}
+  catch (error){
+    return {error}
+  }
 
   return completion.choices[0]
 }
 
-const addMessage = (message, role) => {
+const addMessage = (content, role) => {
   return {
     role: role,
-    message: message
+    content: content
   }
 }
 
